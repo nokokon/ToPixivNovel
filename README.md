@@ -1,0 +1,2 @@
+# ToPixivNovel
+WordドキュメントをPixiv小説記法へ変換するVBA
