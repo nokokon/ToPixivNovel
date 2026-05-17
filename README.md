@@ -1,6 +1,6 @@
 # ToPixvNovel
 ## ライセンス
- MIT License 2026 (c) c
+ MIT License 2026 (c) C
 ## 概要
   Word文書をpixiv小説記法に変換します。
 ## 想定環境
