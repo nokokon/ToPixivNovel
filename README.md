@@ -2,7 +2,7 @@
 ## ライセンス
  MIT License 2026 (c) C
 ## 概要
-  Word文書をpixiv小説記法に変換します。
+  Word文書をpixiv小説記法に変換するVBAです。
 ## 想定環境
   Microsoft(c) Word 2019, Microsoft 365 Word  
   ※ Word 2013 以降なら動くはずです。
