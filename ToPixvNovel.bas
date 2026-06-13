@@ -3,7 +3,7 @@ Option Explicit
 
 '** Document **
 '
-'# ToPixvNovel
+'# ToPixvNovel v1.1
 '
 '## ライセンス
 ' MIT License 2026 (c) C
@@ -73,12 +73,14 @@ Private Function getStyleTag( _
     ByVal end_tag As String _
 ) As Boolean
     getStyleTag = bool
-    If (bool) And (Not pChar.style = style_name) Then
+    If InStr(1, pChar.style, style_name) > 0 Then '必殺技
+        If Not bool Then
+            getStyleTag = True
+            pLineString = pLineString & start_tag: Exit Function
+        End If
+    ElseIf bool Then
         getStyleTag = False
         pLineString = pLineString & end_tag: Exit Function
-    ElseIf (Not bool) And (pChar.style = style_name) Then
-        getStyleTag = True
-        pLineString = pLineString & start_tag: Exit Function
     End If
 End Function
 
@@ -90,22 +92,12 @@ Private Sub getItalicStyle()
     pItalicRange = getStyleTag("斜体", pItalicRange, "[i:", "]")
 End Sub
 
-Private Sub getBoldItalicStyle()
-    pBoldItalicRange = getStyleTag("強調太字＋斜体", pBoldItalicRange, "[b:[i:", "]]")
-End Sub
-
 Private Sub getNormalText()
     Select Case pChar.Text
-        Case vbLf
+        Case Chr(11), vbCr, vbLf '改行 and 改段落
             Call clearTextFormat: Exit Sub
-        Case Chr(11) '改行
-            Call clearTextFormat: Exit Sub
-        Case Chr(12) '改ページ/改セクション
+        Case Chr(12), Chr(14) '改ページ/改セクション and 段区切り
             pLineString = pLineString & "[newpage]": Call clearTextFormat: Exit Sub
-        Case vbCr '改段落
-            Call clearTextFormat: Exit Sub
-        Case Chr(14) '段区切り
-            pLineString = pLineString & vbLf & "[newpage]": Call clearTextFormat: Exit Sub
         Case Else
             pLineString = pLineString & pChar.Text: Exit Sub
     End Select
@@ -165,15 +157,17 @@ End Sub
 Private Sub convStyleRange()
     Call getBoldStyle
     Call getItalicStyle
-    Call getBoldItalicStyle
 End Sub
 
 Private Function getCharactersText() As String
     Dim retString As String: retString = ""
     Dim paras As Paragraphs: Set paras = ActiveDocument.Paragraphs
     Dim chars As Characters
+    Dim paraCounter As Long: paraCounter = 1
 
     For Each pPara In paras
+        Application.StatusBar = "進捗: " & CStr(Int(paraCounter / paras.Count * 100)) & " %"
+
         pLineString = ""
         Set chars = pPara.Range.Characters
 
@@ -188,7 +182,10 @@ Private Function getCharactersText() As String
         Call getSubjectStyle
 
         retString = retString & pLineString
+        paraCounter = paraCounter + 1
     Next pPara
+
+    Application.StatusBar = False
 
     getCharactersText = _
         Replace(Left(retString, Len(retString) - 1), vbLf, vbCrLf)
