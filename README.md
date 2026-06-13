@@ -6,6 +6,8 @@
 ## 想定環境
   Microsoft(c) Word 2019, Microsoft 365 Word  
   ※ Word 2013 以降なら動くはずです。
+## 更新履歴
+  2026/06/14 v1.1 変換速度を改善
 ## 初期設定
   参照設定で "Microsoft Forms 2.0 Object Library" をチェックしてください。
 ## スタイル名
